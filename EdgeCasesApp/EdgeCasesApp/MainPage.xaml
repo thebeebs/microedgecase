@@ -25,7 +25,8 @@
             </Grid.RowDefinitions>
             <TextBox x:Name="TextBox_URLInput" Grid.Row="0"  TextWrapping="Wrap" Text=""  HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="55" PlaceholderText="Enter URL to test..." FontSize="32" MaxLength="17"/>
             <Button x:Name="Button_URLSubmit" Content="Go" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Top" Height="55" Width="100"  Click="Button_Click" FontSize="26.667" FontWeight="Bold" />
-            <StackPanel Grid.Row="1" Margin="0, 30, 0, 0">
+            <StackPanel Grid.Row="1" Margin="0, 10, 0, 0">
+                <ProgressRing Name="resultsProgressRing"  IsActive="False" Margin="20"/>
                 <TextBox Name="TextBox_BrowserDetection" MinHeight="100" MaxHeight="250" IsEnabled="false" FontSize="28"></TextBox>
                 <TextBox Name="TextBox_Markup" MinHeight="100" MaxHeight="250" IsEnabled="false" FontSize="28"></TextBox>
                 <TextBox Name="TextBox_PluginFree" MinHeight="100" MaxHeight="250" IsEnabled="false" FontSize="28"></TextBox>

@@ -29,8 +29,12 @@ namespace EdgeCasesApp
 
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
+            resultsProgressRing.IsActive = true;
+
             var url = TextBox_URLInput.Text;
             RootObject edgeCase = await EdgeCaseModel.GetResults(url);
+
+            resultsProgressRing.IsActive = false;
 
             /*
                 Due to the inconsitent nature of the resulting data from the API, the text blocks have
@@ -67,7 +71,6 @@ namespace EdgeCasesApp
             var cssPrefixes = edgeCase.results.browserDetection;
             TextBox_CSSPrefixes.Text = "CSS Prefixes \t\t  " + StringifyResult(cssPrefixes.passed);
             TextBox_CSSPrefixes.Background = cssPrefixes.passed ? PASS_COLOUR : FAIL_COLOR;
-
         }
 
         private string StringifyResult(bool result)
