@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -32,7 +33,18 @@ namespace EdgeCasesApp
             resultsProgressRing.IsActive = true;
 
             var url = TextBox_URLInput.Text;
-            RootObject edgeCase = await EdgeCaseModel.GetResults(url);
+            RootObject edgeCase;
+
+            try
+            {
+                edgeCase = await EdgeCaseModel.GetResults(url);
+            }
+            catch(Exception ex)
+            {
+                // handle exception...
+                // for now just rethrow
+                throw ex;
+            }
 
             resultsProgressRing.IsActive = false;
 
@@ -42,41 +54,81 @@ namespace EdgeCasesApp
                 they each have different attributes.
                 TODO: 
                 Reengineer the UI 
-                    - Change IsEnabled control template background.
-                    - Separate textbox into multiple indepenent components (Name, Status and Expand/Collapse button)
+                   - Collapse logic into functions
+                   - Standardise data model
+                   - Dynamically generate UI
             */
+
             SolidColorBrush PASS_COLOUR = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 0, 255, 0));
             SolidColorBrush FAIL_COLOR = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 255, 0, 0));
+            const string PASS_TEXT = "PASS";
+            const string FAIL_TEXT = "FAIL";
 
             var browserDetectionResult = edgeCase.results.browserDetection;
-            TextBox_BrowserDetection.Text = "Browser Detection  \t\t " + StringifyResult(browserDetectionResult.passed);
-            TextBox_BrowserDetection.Background = browserDetectionResult.passed ? PASS_COLOUR : FAIL_COLOR;
+            TextBox_BrowserDetectionTitle.Text = browserDetectionResult.testName;
+            TextBox_BrowserDetectionStatus.Text = browserDetectionResult.passed ? PASS_TEXT : FAIL_TEXT;
+            TextBox_BrowserDetectionPanel.Background = browserDetectionResult.passed ? PASS_COLOUR : FAIL_COLOR;
+            TextBox_BrowserDetectionPanel.Visibility = Visibility.Visible;
 
-            var markupResult = edgeCase.results.browserDetection;
-            TextBox_Markup.Text = "Markup  \t\t  " + StringifyResult(markupResult.passed);
-            TextBox_Markup.Background = markupResult.passed ? PASS_COLOUR : FAIL_COLOR;
+            var markupResult = edgeCase.results.markup;
+            TextBox_MarkupTitle.Text = markupResult.testName;
+            TextBox_MarkupStatus.Text = markupResult.passed ? PASS_TEXT : FAIL_TEXT;
+            TextBox_MarkupPanel.Background = markupResult.passed ? PASS_COLOUR : FAIL_COLOR;
+            TextBox_MarkupPanel.Visibility = Visibility.Visible;
 
-            var pluginFreeResult = edgeCase.results.browserDetection;
-            TextBox_PluginFree.Text = "Plugin Free \t\t  " + StringifyResult(pluginFreeResult.passed);
-            TextBox_PluginFree.Background = pluginFreeResult.passed ? PASS_COLOUR : FAIL_COLOR;
+            var pluginFreeResult = edgeCase.results.pluginfree;
+            TextBox_PluginFreeTitle.Text = pluginFreeResult.testName;
+            TextBox_PluginFreeStatus.Text = pluginFreeResult.passed ? PASS_TEXT : FAIL_TEXT;
+            TextBox_PluginFreePanel.Background = pluginFreeResult.passed ? PASS_COLOUR : FAIL_COLOR;
+            TextBox_PluginFreePanel.Visibility = Visibility.Visible;
 
-            var jsLibsResult = edgeCase.results.browserDetection;
-            TextBox_JSLibs.Text = "JS Libs \t\t  " + StringifyResult(jsLibsResult.passed);
-            TextBox_JSLibs.Background = jsLibsResult.passed ? PASS_COLOUR : FAIL_COLOR;
+            var jsLibsResult = edgeCase.results.jslibs;
+            TextBox_JSLibTitle.Text = jsLibsResult.testName;
+            TextBox_JSLibStatus.Text = jsLibsResult.passed ? PASS_TEXT : FAIL_TEXT;
+            TextBox_JSLibPanel.Background = jsLibsResult.passed ? PASS_COLOUR : FAIL_COLOR;
+            TextBox_JSLibPanel.Visibility = Visibility.Visible;
 
-            var edgeResult = edgeCase.results.browserDetection;
-            TextBox_Edge.Text = "Edge \t\t  " + StringifyResult(edgeResult.passed);
-            TextBox_Edge.Background = edgeResult.passed ? PASS_COLOUR : FAIL_COLOR;
+            var edgeResult = edgeCase.results.edge;
+            TextBox_EdgeTitle.Text = edgeResult.testName;
+            TextBox_EdgeStatus.Text = edgeResult.passed ? PASS_TEXT : FAIL_TEXT;
+            TextBox_EdgePanel.Background = edgeResult.passed ? PASS_COLOUR : FAIL_COLOR;
+            TextBox_EdgePanel.Visibility = Visibility.Visible;
 
-            var cssPrefixes = edgeCase.results.browserDetection;
-            TextBox_CSSPrefixes.Text = "CSS Prefixes \t\t  " + StringifyResult(cssPrefixes.passed);
-            TextBox_CSSPrefixes.Background = cssPrefixes.passed ? PASS_COLOUR : FAIL_COLOR;
+            var cssPrefixes = edgeCase.results.cssprefixes;
+            TextBox_CSSPrefixesTitle.Text = cssPrefixes.testName;
+            TextBox_CSSPrefixesStatus.Text = cssPrefixes.passed ? PASS_TEXT : FAIL_TEXT;
+            TextBox_CSSPrefixesPanel.Background = cssPrefixes.passed ? PASS_COLOUR : FAIL_COLOR;
+            TextBox_CSSPrefixesPanel.Visibility = Visibility.Visible;
         }
 
-        private string StringifyResult(bool result)
+        private void Button_BrowserDetectionDetails_Click(object sender, RoutedEventArgs e)
         {
-            var output = result ? "PASS": "FAIL";
-            return output;
+            throw new NotImplementedException();
+        }
+
+        private void Button_MarkupDetails_Click(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void Button_JSLibDetails_Click(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void Button_CSSPrefixesDetails_Click(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void Button_PluginFreeDetails_Click(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void Button_EdgeDetails_Click(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
         }
     }
 }

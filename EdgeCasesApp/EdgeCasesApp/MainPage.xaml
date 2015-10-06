@@ -27,13 +27,39 @@
             <Button x:Name="Button_URLSubmit" Content="Go" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Top" Height="55" Width="100"  Click="Button_Click" FontSize="26.667" FontWeight="Bold" />
             <StackPanel Grid.Row="1" Margin="0, 10, 0, 0">
                 <ProgressRing Name="resultsProgressRing"  IsActive="False" Margin="20"/>
-                <TextBox Name="TextBox_BrowserDetection" MinHeight="100" MaxHeight="250" IsEnabled="false" FontSize="28"></TextBox>
-                <TextBox Name="TextBox_Markup" MinHeight="100" MaxHeight="250" IsEnabled="false" FontSize="28"></TextBox>
-                <TextBox Name="TextBox_PluginFree" MinHeight="100" MaxHeight="250" IsEnabled="false" FontSize="28"></TextBox>
-                <TextBox Name="TextBox_JSLibs" MinHeight="100" MaxHeight="250" IsEnabled="false" FontSize="28"></TextBox>
-                <TextBox Name="TextBox_Edge" MinHeight="100" MaxHeight="250" IsEnabled="false" FontSize="28"></TextBox>
-                <TextBox Name="TextBox_CSSPrefixes" MinHeight="100" MaxHeight="250" IsEnabled="false" FontSize="28" Background="{x:Null}"/>
+                <StackPanel Name="TextBox_BrowserDetectionPanel" Orientation="Horizontal" MinHeight="100" MaxHeight="250" Visibility="Collapsed">
+                    <Button Name="Button_BrowserDetectionDetails" Content="+" VerticalAlignment="Center" Margin="15,0" Click="Button_BrowserDetectionDetails_Click"></Button>
+                    <TextBlock Name="TextBox_BrowserDetectionTitle" HorizontalAlignment="Stretch" Width="450" FontSize="30" VerticalAlignment="Center"></TextBlock>
+                    <TextBlock Name="TextBox_BrowserDetectionStatus" HorizontalAlignment="Right" FontSize="30" VerticalAlignment="Center" FontWeight="Bold"></TextBlock>
+                </StackPanel>
+                <StackPanel Name="TextBox_MarkupPanel" Orientation="Horizontal" MinHeight="100" MaxHeight="250" Visibility="Collapsed">
+                    <Button Name="Button_MarkupDetails" Content="+" VerticalAlignment="Center" Margin="15,0" Click="Button_MarkupDetails_Click"></Button>
+                    <TextBlock Name="TextBox_MarkupTitle" HorizontalAlignment="Stretch" Width="450" FontSize="30" VerticalAlignment="Center"></TextBlock>
+                    <TextBlock Name="TextBox_MarkupStatus" HorizontalAlignment="Right" FontSize="30" VerticalAlignment="Center" FontWeight="Bold"></TextBlock>
+                </StackPanel>
+                <StackPanel Name="TextBox_JSLibPanel" Orientation="Horizontal" MinHeight="100" MaxHeight="250" Visibility="Collapsed">
+                    <Button Name="Button_JSLibDetails" Content="+" VerticalAlignment="Center" Margin="15,0" Click="Button_JSLibDetails_Click"></Button>
+                    <TextBlock Name="TextBox_JSLibTitle" HorizontalAlignment="Stretch" Width="450" FontSize="30" VerticalAlignment="Center"></TextBlock>
+                    <TextBlock Name="TextBox_JSLibStatus" HorizontalAlignment="Right" FontSize="30" VerticalAlignment="Center" FontWeight="Bold"></TextBlock>
+                </StackPanel>
+                <StackPanel Name="TextBox_CSSPrefixesPanel" Orientation="Horizontal" MinHeight="100" MaxHeight="250" Visibility="Collapsed">
+                    <Button Name="Button_CSSPrefixesDetails" Content="+" VerticalAlignment="Center" Margin="15,0" Click="Button_CSSPrefixesDetails_Click"></Button>
+                    <TextBlock Name="TextBox_CSSPrefixesTitle" HorizontalAlignment="Stretch" Width="450" FontSize="30" VerticalAlignment="Center"></TextBlock>
+                    <TextBlock Name="TextBox_CSSPrefixesStatus" HorizontalAlignment="Right" FontSize="30" VerticalAlignment="Center" FontWeight="Bold"></TextBlock>
+                </StackPanel>
+                <StackPanel Name="TextBox_PluginFreePanel" Orientation="Horizontal" MinHeight="100" MaxHeight="250" Visibility="Collapsed">
+                    <Button Name="Button_PluginFreeDetails" Content="+" VerticalAlignment="Center" Margin="15,0" Click="Button_PluginFreeDetails_Click"></Button>
+                    <TextBlock Name="TextBox_PluginFreeTitle" HorizontalAlignment="Stretch" Width="450" FontSize="30" VerticalAlignment="Center"></TextBlock>
+                    <TextBlock Name="TextBox_PluginFreeStatus" HorizontalAlignment="Right" FontSize="30" VerticalAlignment="Center" FontWeight="Bold"></TextBlock>
+                </StackPanel>
+                <StackPanel Name="TextBox_EdgePanel" Orientation="Horizontal" MinHeight="100" MaxHeight="250" Visibility="Collapsed">
+                    <Button Name="Button_EdgeDetails" Content="+" VerticalAlignment="Center" Margin="15,0" Click="Button_EdgeDetails_Click"></Button>
+                    <TextBlock Name="TextBox_EdgeTitle" HorizontalAlignment="Stretch" Width="450" FontSize="30" VerticalAlignment="Center"></TextBlock>
+                    <TextBlock Name="TextBox_EdgeStatus" HorizontalAlignment="Right" FontSize="30" VerticalAlignment="Center" FontWeight="Bold"></TextBlock>
+                </StackPanel>
             </StackPanel>
         </Grid>
     </Grid>
+    
+
 </Page>
