@@ -26,12 +26,12 @@
             <TextBox x:Name="TextBox_URLInput" Grid.Row="0"  TextWrapping="Wrap" Text=""  HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="55" PlaceholderText="Enter URL to test..." FontSize="32" MaxLength="17"/>
             <Button x:Name="Button_URLSubmit" Content="Go" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Top" Height="55" Width="100"  Click="Button_Click" FontSize="26.667" FontWeight="Bold" />
             <StackPanel Grid.Row="1" Margin="0, 30, 0, 0">
-                <TextBox Name="TextBox_BrowserDetection" MinHeight="100" MaxHeight="250" IsEnabled="false" FontSize="28" BorderBrush="#FF7A7A7A" Background="White"></TextBox>
+                <TextBox Name="TextBox_BrowserDetection" MinHeight="100" MaxHeight="250" IsEnabled="false" FontSize="28"></TextBox>
                 <TextBox Name="TextBox_Markup" MinHeight="100" MaxHeight="250" IsEnabled="false" FontSize="28"></TextBox>
                 <TextBox Name="TextBox_PluginFree" MinHeight="100" MaxHeight="250" IsEnabled="false" FontSize="28"></TextBox>
                 <TextBox Name="TextBox_JSLibs" MinHeight="100" MaxHeight="250" IsEnabled="false" FontSize="28"></TextBox>
                 <TextBox Name="TextBox_Edge" MinHeight="100" MaxHeight="250" IsEnabled="false" FontSize="28"></TextBox>
-                <TextBox Name="TextBox_CSSPrefixes" MinHeight="100" MaxHeight="250" IsEnabled="false" FontSize="28"></TextBox>
+                <TextBox Name="TextBox_CSSPrefixes" MinHeight="100" MaxHeight="250" IsEnabled="false" FontSize="28" Background="{x:Null}"/>
             </StackPanel>
         </Grid>
     </Grid>

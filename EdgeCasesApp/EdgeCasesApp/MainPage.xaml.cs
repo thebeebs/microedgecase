@@ -36,6 +36,10 @@ namespace EdgeCasesApp
                 Due to the inconsitent nature of the resulting data from the API, the text blocks have
                 been hardcoded. It is not beneficial to abstract each property into a super class as
                 they each have different attributes.
+                TODO: 
+                Reengineer the UI 
+                    - Change IsEnabled control template background.
+                    - Separate textbox into multiple indepenent components (Name, Status and Expand/Collapse button)
             */
             SolidColorBrush PASS_COLOUR = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 0, 255, 0));
             SolidColorBrush FAIL_COLOR = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 255, 0, 0));
