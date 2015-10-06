@@ -7,17 +7,32 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <TextBox x:Name="textBox" HorizontalAlignment="Left" Margin="331,117,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="34" Width="357"/>
-        <Button x:Name="button" Content="Go" HorizontalAlignment="Left" Margin="388,196,0,0" VerticalAlignment="Top" Height="70" Width="216"  Click="Button_Click"/>
-        <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="423,54,0,0" TextWrapping="Wrap" Text="Enter website address" VerticalAlignment="Top" Height="58" Width="226"/>
-        
-        <TextBlock x:Name="textResult_browserDetection" HorizontalAlignment="Left" Margin="130,336,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="65" Width="776"/>
-        <TextBlock x:Name="textResult_markup" HorizontalAlignment="Left" Margin="130,406,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="65" Width="776"/>
-        <TextBlock x:Name="textResult_pluginFree" HorizontalAlignment="Left" Margin="130,476,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="65" Width="776"/>
-        <TextBlock x:Name="textResult_jsLibs" HorizontalAlignment="Left" Margin="130,546,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="65" Width="776"/>
-        <TextBlock x:Name="textResult_edge" HorizontalAlignment="Left" Margin="130,611,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="65" Width="776"/>
-        <TextBlock x:Name="textResult_css" HorizontalAlignment="Left" Margin="130,660,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="65" Width="776"/>
-
+    <Grid Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="800"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="600"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Row="1" Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <TextBox x:Name="TextBox_URLInput" Grid.Row="0"  TextWrapping="Wrap" Text=""  HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="55" PlaceholderText="Enter URL to test..." FontSize="32" MaxLength="17"/>
+            <Button x:Name="Button_URLSubmit" Content="Go" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Top" Height="55" Width="100"  Click="Button_Click" FontSize="26.667" FontWeight="Bold" />
+            <StackPanel Grid.Row="1" Margin="0, 30, 0, 0">
+                <TextBox Name="TextBox_BrowserDetection" MinHeight="100" MaxHeight="250" IsEnabled="false" FontSize="28" BorderBrush="#FF7A7A7A" Background="White"></TextBox>
+                <TextBox Name="TextBox_Markup" MinHeight="100" MaxHeight="250" IsEnabled="false" FontSize="28"></TextBox>
+                <TextBox Name="TextBox_PluginFree" MinHeight="100" MaxHeight="250" IsEnabled="false" FontSize="28"></TextBox>
+                <TextBox Name="TextBox_JSLibs" MinHeight="100" MaxHeight="250" IsEnabled="false" FontSize="28"></TextBox>
+                <TextBox Name="TextBox_Edge" MinHeight="100" MaxHeight="250" IsEnabled="false" FontSize="28"></TextBox>
+                <TextBox Name="TextBox_CSSPrefixes" MinHeight="100" MaxHeight="250" IsEnabled="false" FontSize="28"></TextBox>
+            </StackPanel>
+        </Grid>
     </Grid>
 </Page>

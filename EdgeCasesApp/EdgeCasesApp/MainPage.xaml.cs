@@ -29,16 +29,40 @@ namespace EdgeCasesApp
 
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
-
-            var url = textBox.Text;
+            var url = TextBox_URLInput.Text;
             RootObject edgeCase = await EdgeCaseModel.GetResults(url);
 
-            textResult_browserDetection.Text = "Browser Detection  \t  " + StringifyResult(edgeCase.results.browserDetection.passed);
-            textResult_markup.Text = "Markup  \t  " + StringifyResult(edgeCase.results.markup.passed);
-            textResult_pluginFree.Text = "Plugin Free \t  " + StringifyResult(edgeCase.results.pluginfree.passed);
-            textResult_jsLibs.Text = "JS Libs \t  " + StringifyResult(edgeCase.results.jslibs.passed);
-            textResult_edge.Text = "Edge \t  " + StringifyResult(edgeCase.results.edge.passed);
-            textResult_css.Text = "CSS Prefixes \t  " + StringifyResult(edgeCase.results.cssprefixes.passed);
+            /*
+                Due to the inconsitent nature of the resulting data from the API, the text blocks have
+                been hardcoded. It is not beneficial to abstract each property into a super class as
+                they each have different attributes.
+            */
+            SolidColorBrush PASS_COLOUR = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 0, 255, 0));
+            SolidColorBrush FAIL_COLOR = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 255, 0, 0));
+
+            var browserDetectionResult = edgeCase.results.browserDetection;
+            TextBox_BrowserDetection.Text = "Browser Detection  \t\t " + StringifyResult(browserDetectionResult.passed);
+            TextBox_BrowserDetection.Background = browserDetectionResult.passed ? PASS_COLOUR : FAIL_COLOR;
+
+            var markupResult = edgeCase.results.browserDetection;
+            TextBox_Markup.Text = "Markup  \t\t  " + StringifyResult(markupResult.passed);
+            TextBox_Markup.Background = markupResult.passed ? PASS_COLOUR : FAIL_COLOR;
+
+            var pluginFreeResult = edgeCase.results.browserDetection;
+            TextBox_PluginFree.Text = "Plugin Free \t\t  " + StringifyResult(pluginFreeResult.passed);
+            TextBox_PluginFree.Background = pluginFreeResult.passed ? PASS_COLOUR : FAIL_COLOR;
+
+            var jsLibsResult = edgeCase.results.browserDetection;
+            TextBox_JSLibs.Text = "JS Libs \t\t  " + StringifyResult(jsLibsResult.passed);
+            TextBox_JSLibs.Background = jsLibsResult.passed ? PASS_COLOUR : FAIL_COLOR;
+
+            var edgeResult = edgeCase.results.browserDetection;
+            TextBox_Edge.Text = "Edge \t\t  " + StringifyResult(edgeResult.passed);
+            TextBox_Edge.Background = edgeResult.passed ? PASS_COLOUR : FAIL_COLOR;
+
+            var cssPrefixes = edgeCase.results.browserDetection;
+            TextBox_CSSPrefixes.Text = "CSS Prefixes \t\t  " + StringifyResult(cssPrefixes.passed);
+            TextBox_CSSPrefixes.Background = cssPrefixes.passed ? PASS_COLOUR : FAIL_COLOR;
 
         }
 
