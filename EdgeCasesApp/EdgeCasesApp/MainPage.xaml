@@ -19,5 +19,9 @@
         <TextBlock x:Name="textResult_edge" HorizontalAlignment="Left" Margin="130,611,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="65" Width="776"/>
         <TextBlock x:Name="textResult_css" HorizontalAlignment="Left" Margin="130,660,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="65" Width="776"/>
 
+
+        <ProgressRing Name="resultsProgressRing"  IsActive="False" HorizontalAlignment="Left" Margin="641,221,0,0" VerticalAlignment="Top"/>
+
+
     </Grid>
 </Page>

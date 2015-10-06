@@ -30,8 +30,12 @@ namespace EdgeCasesApp
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
 
+            resultsProgressRing.IsActive = true;
+
             var url = textBox.Text;
             RootObject edgeCase = await EdgeCaseModel.GetResults(url);
+
+            resultsProgressRing.IsActive = false;
 
             textResult_browserDetection.Text = "Browser Detection  \t  " + StringifyResult(edgeCase.results.browserDetection.passed);
             textResult_markup.Text = "Markup  \t  " + StringifyResult(edgeCase.results.markup.passed);
