@@ -9,7 +9,7 @@
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <TextBox x:Name="textBox" HorizontalAlignment="Left" Margin="331,117,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="34" Width="357"/>
-        <Button x:Name="button" Content="Go" HorizontalAlignment="Left" Margin="388,196,0,0" VerticalAlignment="Top" Height="70" Width="216"  Click="button_Click"/>
+        <Button x:Name="button" Content="Go" HorizontalAlignment="Left" Margin="388,196,0,0" VerticalAlignment="Top" Height="70" Width="216"  Click="Button_Click"/>
         <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="423,54,0,0" TextWrapping="Wrap" Text="Enter website address" VerticalAlignment="Top" Height="58" Width="226"/>
         
         <TextBlock x:Name="textResult_browserDetection" HorizontalAlignment="Left" Margin="130,336,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="65" Width="776"/>

@@ -27,35 +27,25 @@ namespace EdgeCasesApp
             this.InitializeComponent();
         }
 
-        private async void button_Click(object sender, RoutedEventArgs e)
+        private async void Button_Click(object sender, RoutedEventArgs e)
         {
 
             var url = textBox.Text;
             RootObject edgeCase = await EdgeCaseModel.GetResults(url);
 
-            textResult_browserDetection.Text = "Browser Detection  \t  " + BoolToString(edgeCase.results.browserDetection.passed);
-            textResult_markup.Text = "Markup  \t  " + BoolToString(edgeCase.results.markup.passed);
-            textResult_pluginFree.Text = "Plugin Free \t  " + BoolToString(edgeCase.results.pluginfree.passed);
-            textResult_jsLibs.Text = "JS Libs \t  " + BoolToString(edgeCase.results.jslibs.passed);
-            textResult_edge.Text = "Edge \t  " + BoolToString(edgeCase.results.edge.passed);
-            textResult_css.Text = "CSS Prefxies \t  " + BoolToString(edgeCase.results.cssprefixes.passed);
+            textResult_browserDetection.Text = "Browser Detection  \t  " + StringifyResult(edgeCase.results.browserDetection.passed);
+            textResult_markup.Text = "Markup  \t  " + StringifyResult(edgeCase.results.markup.passed);
+            textResult_pluginFree.Text = "Plugin Free \t  " + StringifyResult(edgeCase.results.pluginfree.passed);
+            textResult_jsLibs.Text = "JS Libs \t  " + StringifyResult(edgeCase.results.jslibs.passed);
+            textResult_edge.Text = "Edge \t  " + StringifyResult(edgeCase.results.edge.passed);
+            textResult_css.Text = "CSS Prefixes \t  " + StringifyResult(edgeCase.results.cssprefixes.passed);
 
         }
 
-        public string BoolToString(bool boolean)
+        private string StringifyResult(bool result)
         {
-            string result;
-
-            if (boolean == true)
-            {
-                result = "PASS";
-            }
-            else
-            {
-                result = "FAIL";
-            }
-
-            return result;
+            var output = result ? "PASS": "FAIL";
+            return output;
         }
     }
 }

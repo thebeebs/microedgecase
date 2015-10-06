@@ -86,7 +86,7 @@ namespace EdgeCasesApp
     }
 
     [DataContract]
-    public class Cssprefixes
+    public class CssPrefixes
     {
         [DataMember]
         public string testName { get; set; }
@@ -117,7 +117,7 @@ namespace EdgeCasesApp
     }
 
     [DataContract]
-    public class Jslibs
+    public class JSLibs
     {
         [DataMember]
         public string testName { get; set; }
@@ -130,7 +130,7 @@ namespace EdgeCasesApp
     }
 
     [DataContract]
-    public class Pluginfree
+    public class PluginFree
     {
         [DataMember]
         public string testName { get; set; }
@@ -172,13 +172,13 @@ namespace EdgeCasesApp
         [DataMember]
         public BrowserDetection browserDetection { get; set; }
         [DataMember]
-        public Cssprefixes cssprefixes { get; set; }
+        public CssPrefixes cssprefixes { get; set; }
         [DataMember]
         public Edge edge { get; set; }
         [DataMember]
-        public Jslibs jslibs { get; set; }
+        public JSLibs jslibs { get; set; }
         [DataMember]
-        public Pluginfree pluginfree { get; set; }
+        public PluginFree pluginfree { get; set; }
         [DataMember]
         public Markup markup { get; set; }
     }
