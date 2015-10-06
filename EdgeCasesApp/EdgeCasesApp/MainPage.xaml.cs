@@ -33,13 +33,29 @@ namespace EdgeCasesApp
             var url = textBox.Text;
             RootObject edgeCase = await EdgeCaseModel.GetResults(url);
 
-            textResult_browserDetection.Text = "Test: " + edgeCase.results.browserDetection.testName + " \nPassed?: " + edgeCase.results.browserDetection.passed.ToString();
-            textResult_markup.Text = "Test: " + edgeCase.results.markup.testName + " \nPassed?: " + edgeCase.results.markup.passed.ToString();
-            textResult_pluginFree.Text = "Test: " + edgeCase.results.pluginfree.testName + " \nPassed?: " + edgeCase.results.pluginfree.passed.ToString();
-            textResult_jsLibs.Text = "Test: " + edgeCase.results.jslibs.testName + " \nPassed?: " + edgeCase.results.jslibs.passed.ToString();
-            textResult_edge.Text = "Test: " + edgeCase.results.edge.testName + " \nPassed?: " + edgeCase.results.edge.passed.ToString();
-            textResult_css.Text = "Test: " + edgeCase.results.cssprefixes.testName + " \nPassed?: " + edgeCase.results.cssprefixes.passed.ToString();
+            textResult_browserDetection.Text = "Browser Detection  \t  " + BoolToString(edgeCase.results.browserDetection.passed);
+            textResult_markup.Text = "Markup  \t  " + BoolToString(edgeCase.results.markup.passed);
+            textResult_pluginFree.Text = "Plugin Free \t  " + BoolToString(edgeCase.results.pluginfree.passed);
+            textResult_jsLibs.Text = "JS Libs \t  " + BoolToString(edgeCase.results.jslibs.passed);
+            textResult_edge.Text = "Edge \t  " + BoolToString(edgeCase.results.edge.passed);
+            textResult_css.Text = "CSS Prefxies \t  " + BoolToString(edgeCase.results.cssprefixes.passed);
 
+        }
+
+        public string BoolToString(bool boolean)
+        {
+            string result;
+
+            if (boolean == true)
+            {
+                result = "PASS";
+            }
+            else
+            {
+                result = "FAIL";
+            }
+
+            return result;
         }
     }
 }

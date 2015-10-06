@@ -1,1 +1,1 @@
-C:\Users\likasem\OneDrive\Documents\Visual Studio Projects\EdgeCasesApp\EdgeCasesApp\EdgeCasesApp.csproj;x86
+C:\Users\likasem\OneDrive\Source\microedgecase\EdgeCasesApp\EdgeCasesApp\EdgeCasesApp.csproj;x86
