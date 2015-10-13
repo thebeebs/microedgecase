@@ -13,7 +13,11 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
+using System.Diagnostics;
+using System.Text.RegularExpressions;
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
 namespace EdgeCasesApp
@@ -32,12 +36,25 @@ namespace EdgeCasesApp
         {
             resultsProgressRing.IsActive = true;
 
+            //Getting URL from user input
             var url = TextBox_URLInput.Text;
+
             RootObject edgeCase;
 
             try
             {
-                edgeCase = await EdgeCaseModel.GetResults(url);
+
+                if(url == "")
+                {
+                    //Getting results from text message using Twilio
+                    edgeCase = await EdgeCaseModel.GetResultsTwilio();
+                }
+                else
+                {
+                    //Getting results from user inputted URL
+                    edgeCase = await EdgeCaseModel.GetResults(url);
+                }
+
             }
             catch(Exception ex)
             {
@@ -132,3 +149,4 @@ namespace EdgeCasesApp
         }
     }
 }
+

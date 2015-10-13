@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace EdgeCasesApp
@@ -16,7 +17,29 @@ namespace EdgeCasesApp
         public async static Task<RootObject> GetResults(string url)
         {
             var http = new HttpClient();
+
             var apiUrl = String.Format("http://edge.azurewebsites.net/api/v2/scan?url=http://{0}", url);
+            var response = await http.GetAsync(apiUrl);
+            var result = await response.Content.ReadAsStringAsync();
+            var serializer = new DataContractJsonSerializer(typeof(RootObject));
+
+            var ms = new MemoryStream(Encoding.UTF8.GetBytes(result));
+            var data = (RootObject)serializer.ReadObject(ms);
+
+            return data;
+        }
+
+        //Method that calls the Twilio API using a php script and gets the URL to be tested from a text message
+        public async static Task<RootObject> GetResultsTwilio()
+        {
+            var http = new HttpClient();
+
+            var uri = "http://edgecasetwilio.azurewebsites.net/connect.php";
+            var responseTwilio = await http.GetAsync(uri);
+            string resultTwilio = await responseTwilio.Content.ReadAsStringAsync();
+            resultTwilio = Regex.Replace(resultTwilio, @"\t|\n|\r", "");
+
+            var apiUrl = String.Format("http://edge.azurewebsites.net/api/v2/scan?url=http://{0}", resultTwilio);
             var response = await http.GetAsync(apiUrl);
             var result = await response.Content.ReadAsStringAsync();
             var serializer = new DataContractJsonSerializer(typeof(RootObject));
