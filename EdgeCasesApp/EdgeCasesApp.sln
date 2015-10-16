@@ -13,6 +13,9 @@ Global
 		Release|ARM = Release|ARM
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
+		RM|ARM = RM|ARM
+		RM|x64 = RM|x64
+		RM|x86 = RM|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{82DBC47C-9B0B-4A92-9D6E-D1ADAA830161}.Debug|ARM.ActiveCfg = Debug|ARM
@@ -33,6 +36,15 @@ Global
 		{82DBC47C-9B0B-4A92-9D6E-D1ADAA830161}.Release|x86.ActiveCfg = Release|x86
 		{82DBC47C-9B0B-4A92-9D6E-D1ADAA830161}.Release|x86.Build.0 = Release|x86
 		{82DBC47C-9B0B-4A92-9D6E-D1ADAA830161}.Release|x86.Deploy.0 = Release|x86
+		{82DBC47C-9B0B-4A92-9D6E-D1ADAA830161}.RM|ARM.ActiveCfg = RM|ARM
+		{82DBC47C-9B0B-4A92-9D6E-D1ADAA830161}.RM|ARM.Build.0 = RM|ARM
+		{82DBC47C-9B0B-4A92-9D6E-D1ADAA830161}.RM|ARM.Deploy.0 = RM|ARM
+		{82DBC47C-9B0B-4A92-9D6E-D1ADAA830161}.RM|x64.ActiveCfg = RM|x64
+		{82DBC47C-9B0B-4A92-9D6E-D1ADAA830161}.RM|x64.Build.0 = RM|x64
+		{82DBC47C-9B0B-4A92-9D6E-D1ADAA830161}.RM|x64.Deploy.0 = RM|x64
+		{82DBC47C-9B0B-4A92-9D6E-D1ADAA830161}.RM|x86.ActiveCfg = RM|x86
+		{82DBC47C-9B0B-4A92-9D6E-D1ADAA830161}.RM|x86.Build.0 = RM|x86
+		{82DBC47C-9B0B-4A92-9D6E-D1ADAA830161}.RM|x86.Deploy.0 = RM|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

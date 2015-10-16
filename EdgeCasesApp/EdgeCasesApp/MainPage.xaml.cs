@@ -4,6 +4,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.Devices.Gpio;
 using Windows.UI.Core;
+using System.Net.Http;
 
 namespace EdgeCasesApp
 {
@@ -52,37 +53,29 @@ namespace EdgeCasesApp
             GpioStatus.Text = "GPIO pins initialized correctly.";
         }
 
-        private async void GetResults()
+        private async void GetResultsIoT()
         {
-            resultsProgressRing.IsActive = true;
-
-            //Getting URL from user input
-            var url = TextBox_URLInput.Text;          
-
+            resultsProgressRing.IsActive = true;         
+           
             try
             {
                 RootObject edgeCase;
-
-                if (url == "")
-                {
-                    //Getting results from text message using Twilio
-                    edgeCase = await EdgeCaseModel.GetResultsTwilio();
-                }
-                else
-                {
-                    //Getting results from user inputted URL
-                    edgeCase = await EdgeCaseModel.GetResults(url);
-                }
-
+                edgeCase = await EdgeCaseModel.GetResultsTwilio();
                 DisplayResults(edgeCase);
             }
-            catch (Exception ex)
+            catch (NullReferenceException nullEx)
             {
-                // handle exception, for now just throw
-                throw ex;
-            }          
+                GpioStatus.Text = "No website URL found";
+                System.Diagnostics.Debug.Write(nullEx);
+            }
+            catch (HttpRequestException httpEx)
+            {
+                GpioStatus.Text = "No internet";
+                System.Diagnostics.Debug.Write(httpEx);
+            }        
 
             resultsProgressRing.IsActive = false;
+            GpioStatus.Text = "Found it!";
         }   
 
         private void DisplayResults(RootObject edgeCase)
@@ -146,13 +139,39 @@ namespace EdgeCasesApp
         //RPi / IoT device button press to get edge case results (pressing physical button)
         private void buttonPin_ValueChanged(GpioPin sender, GpioPinValueChangedEventArgs e)
         {
-            var task = Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { GetResults(); });
+            var task = Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { GetResultsIoT(); });
         }
 
         //Mobile/table/PC device button press to get edge case results (pressing the 'GO' button in the UI)
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            GetResults();
+            resultsProgressRing.IsActive = true;
+
+            //Getting URL from user input
+            var url = TextBox_URLInput.Text;
+
+            try
+            {
+                RootObject edgeCase;
+
+                //Getting results from user inputted URL
+                edgeCase = await EdgeCaseModel.GetResults(url);
+
+                DisplayResults(edgeCase);
+            }
+            catch (NullReferenceException nullEx)
+            {
+                GpioStatus.Text = "No website URL found";
+                System.Diagnostics.Debug.Write(nullEx);
+            }
+            catch (HttpRequestException httpEx)
+            {
+                GpioStatus.Text = "No internet";
+                System.Diagnostics.Debug.Write(httpEx);
+            }
+
+            resultsProgressRing.IsActive = false;
+            GpioStatus.Text = "Found it!";
         }
 
         private void Button_BrowserDetectionDetails_Click(object sender, RoutedEventArgs e)
