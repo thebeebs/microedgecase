@@ -34,7 +34,6 @@ namespace EdgeCasesApp
         {
             var http = new HttpClient();
 
-
             // var apiURLTest = "https://ACdf2c6c6aecf1040591d0bf905d0663c9:d1663fdad12ad072387403c741989ce7@api.twilio.com//2010-04-01/Accounts/ACdf2c6c6aecf1040591d0bf905d0663c9/Messages/https://api.twilio.com//2010-04-01/Accounts/ACdf2c6c6aecf1040591d0bf905d0663c9/Messages/SM39eb81a4393476ec73b1539b7421dc70";
 
             var uri = "http://edgecasetwilio.azurewebsites.net/getSMS.php";

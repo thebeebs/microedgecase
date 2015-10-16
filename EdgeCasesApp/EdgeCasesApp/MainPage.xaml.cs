@@ -1,50 +1,69 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
-using System.Diagnostics;
-using System.Text.RegularExpressions;
-// The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
+using Windows.Devices.Gpio;
+using Windows.UI.Core;
 
 namespace EdgeCasesApp
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
+
     public sealed partial class MainPage : Page
     {
+
+        private const int BUTTON_PIN = 5;
+        private GpioPin buttonPin;
+
         public MainPage()
         {
             this.InitializeComponent();
+
+            if (Windows.Foundation.Metadata.ApiInformation.IsApiContractPresent("Windows.Devices.DevicesLowLevelContract", 1))
+            {
+                InitGPIO();
+            }
         }
 
-        private async void Button_Click(object sender, RoutedEventArgs e)
+        private void InitGPIO()
+        {
+            var gpio = GpioController.GetDefault();
+
+            if (gpio == null)
+            {
+                GpioStatus.Text = "There is no GPIO controller on this device.";
+                return;
+            }
+
+            buttonPin = gpio.OpenPin(BUTTON_PIN);
+
+            // Check if input pull-up resistors are supported
+            if (buttonPin.IsDriveModeSupported(GpioPinDriveMode.InputPullUp))
+                buttonPin.SetDriveMode(GpioPinDriveMode.InputPullUp);
+            else
+                buttonPin.SetDriveMode(GpioPinDriveMode.Input);
+
+            // Set a debounce timeout to filter out switch bounce noise from a button press
+            buttonPin.DebounceTimeout = TimeSpan.FromMilliseconds(50);
+
+            // Register for the ValueChanged event so our buttonPin_ValueChanged 
+            // function is called when the button is pressed
+            buttonPin.ValueChanged += buttonPin_ValueChanged;
+
+            GpioStatus.Text = "GPIO pins initialized correctly.";
+        }
+
+        private async void GetResults()
         {
             resultsProgressRing.IsActive = true;
 
             //Getting URL from user input
-            var url = TextBox_URLInput.Text;
-
-            RootObject edgeCase;
+            var url = TextBox_URLInput.Text;          
 
             try
             {
+                RootObject edgeCase;
 
-                if(url == "")
+                if (url == "")
                 {
                     //Getting results from text message using Twilio
                     edgeCase = await EdgeCaseModel.GetResultsTwilio();
@@ -55,15 +74,19 @@ namespace EdgeCasesApp
                     edgeCase = await EdgeCaseModel.GetResults(url);
                 }
 
+                DisplayResults(edgeCase);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                // handle exception...
-                // for now just rethrow
+                // handle exception, for now just throw
                 throw ex;
-            }
+            }          
 
             resultsProgressRing.IsActive = false;
+        }   
+
+        private void DisplayResults(RootObject edgeCase)
+        {
 
             /*
                 Due to the inconsitent nature of the resulting data from the API, the text blocks have
@@ -75,6 +98,8 @@ namespace EdgeCasesApp
                    - Standardise data model
                    - Dynamically generate UI
             */
+
+
 
             SolidColorBrush PASS_COLOUR = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 0, 255, 0));
             SolidColorBrush FAIL_COLOR = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 255, 0, 0));
@@ -118,6 +143,18 @@ namespace EdgeCasesApp
             TextBox_CSSPrefixesPanel.Visibility = Visibility.Visible;
         }
 
+        //RPi / IoT device button press to get edge case results (pressing physical button)
+        private void buttonPin_ValueChanged(GpioPin sender, GpioPinValueChangedEventArgs e)
+        {
+            var task = Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { GetResults(); });
+        }
+
+        //Mobile/table/PC device button press to get edge case results (pressing the 'GO' button in the UI)
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            GetResults();
+        }
+
         private void Button_BrowserDetectionDetails_Click(object sender, RoutedEventArgs e)
         {
             throw new NotImplementedException();
@@ -147,6 +184,7 @@ namespace EdgeCasesApp
         {
             throw new NotImplementedException();
         }
+
     }
 }
 
