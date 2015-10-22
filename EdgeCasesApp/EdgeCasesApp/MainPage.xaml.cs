@@ -5,6 +5,7 @@ using Windows.UI.Xaml.Media;
 using Windows.Devices.Gpio;
 using Windows.UI.Core;
 using System.Net.Http;
+using Windows.Storage;
 
 namespace EdgeCasesApp
 {
@@ -55,13 +56,16 @@ namespace EdgeCasesApp
 
         private async void GetResultsIoT()
         {
-            resultsProgressRing.IsActive = true;         
-           
+            resultsProgressRing.IsActive = true;
+
             try
             {
+                PlayMusic();
+
                 RootObject edgeCase;
                 edgeCase = await EdgeCaseModel.GetResultsTwilio();
                 DisplayResults(edgeCase);
+
             }
             catch (NullReferenceException nullEx)
             {
@@ -77,6 +81,25 @@ namespace EdgeCasesApp
             resultsProgressRing.IsActive = false;
             GpioStatus.Text = "Found it!";
         }   
+
+        private async void PlayMusic()
+        {
+            //MediaElement mysong = new MediaElement();
+            //Windows.Storage.StorageFolder folder = await Windows.ApplicationModel.Package.Current.InstalledLocation.GetFolderAsync("Assets");
+            //Windows.Storage.StorageFile file = await folder.GetFileAsync("starwars.wav");
+            //var stream = await file.OpenAsync(Windows.Storage.FileAccessMode.Read);
+            //mysong.SetSource(stream, file.ContentType);
+            //mysong.Play();
+
+            MediaElement PlayMusic = new MediaElement();
+            PlayMusic.AudioCategory = Windows.UI.Xaml.Media.AudioCategory.Media;
+
+            StorageFolder Folder = Windows.ApplicationModel.Package.Current.InstalledLocation;
+            Folder = await Folder.GetFolderAsync("Assets");
+            StorageFile sf = await Folder.GetFileAsync("starwars.wav");
+            PlayMusic.SetSource(await sf.OpenAsync(FileAccessMode.Read), sf.ContentType);
+            PlayMusic.Play();
+        }
 
         private void DisplayResults(RootObject edgeCase)
         {
@@ -146,6 +169,7 @@ namespace EdgeCasesApp
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
             resultsProgressRing.IsActive = true;
+            PlayMusic();
 
             //Getting URL from user input
             var url = TextBox_URLInput.Text;
