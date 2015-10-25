@@ -6,6 +6,8 @@ using Windows.Devices.Gpio;
 using Windows.UI.Core;
 using System.Net.Http;
 using Windows.Storage;
+using Microsoft.Maker.RemoteWiring;
+using Microsoft.Maker.Serial;
 
 namespace EdgeCasesApp
 {
@@ -16,6 +18,9 @@ namespace EdgeCasesApp
         private const int BUTTON_PIN = 5;
         private GpioPin buttonPin;
 
+        IStream connection;
+        RemoteDevice arduino;
+
         public MainPage()
         {
             this.InitializeComponent();
@@ -23,6 +28,7 @@ namespace EdgeCasesApp
             if (Windows.Foundation.Metadata.ApiInformation.IsApiContractPresent("Windows.Devices.DevicesLowLevelContract", 1))
             {
                 InitGPIO();
+                InitRemoteSerialCom();
             }
         }
 
@@ -52,6 +58,28 @@ namespace EdgeCasesApp
             buttonPin.ValueChanged += buttonPin_ValueChanged;
 
             GpioStatus.Text = "GPIO pins initialized correctly.";
+        }
+
+        private void InitRemoteSerialCom()
+        {
+            //create a usb connection and pass it to the RemoteDevice
+            connection = new UsbSerial("MyUSBDevice");
+            arduino = new RemoteDevice(connection);
+
+            //add a callback method (delegate) to be invoked when the device is ready
+            arduino.DeviceReady += Setup;
+
+            connection.begin(115200, SerialConfig.SERIAL_8N1);
+        }
+
+        //treat this function like "setup()" in an Arduino sketch.
+        public void Setup()
+        {
+            //set digital pin 13 to OUTPUT
+            arduino.pinMode(13, PinMode.OUTPUT);
+
+            //set analog pin A0 to ANALOG INPUT
+            arduino.pinMode("A0", PinMode.ANALOG);
         }
 
         private async void GetResultsIoT()
