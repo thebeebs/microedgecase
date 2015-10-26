@@ -13,8 +13,11 @@ namespace EdgeCasesApp
     public sealed partial class MainPage : Page
     {
 
+        private const int LED_PIN = 6;
         private const int BUTTON_PIN = 5;
+        private GpioPin ledPin;
         private GpioPin buttonPin;
+        private GpioPinValue ledPinValue = GpioPinValue.High;
 
         public MainPage()
         {
@@ -37,6 +40,11 @@ namespace EdgeCasesApp
             }
 
             buttonPin = gpio.OpenPin(BUTTON_PIN);
+            ledPin = gpio.OpenPin(LED_PIN);
+
+            // Initialize LED to the OFF state by first writing a HIGH value
+            ledPin.Write(GpioPinValue.High);
+            ledPin.SetDriveMode(GpioPinDriveMode.Output);
 
             // Check if input pull-up resistors are supported
             if (buttonPin.IsDriveModeSupported(GpioPinDriveMode.InputPullUp))
@@ -79,24 +87,18 @@ namespace EdgeCasesApp
             }        
 
             resultsProgressRing.IsActive = false;
+
             GpioStatus.Text = "Found it!";
         }   
 
         private async void PlayMusic()
         {
-            //MediaElement mysong = new MediaElement();
-            //Windows.Storage.StorageFolder folder = await Windows.ApplicationModel.Package.Current.InstalledLocation.GetFolderAsync("Assets");
-            //Windows.Storage.StorageFile file = await folder.GetFileAsync("starwars.wav");
-            //var stream = await file.OpenAsync(Windows.Storage.FileAccessMode.Read);
-            //mysong.SetSource(stream, file.ContentType);
-            //mysong.Play();
-
             MediaElement PlayMusic = new MediaElement();
             PlayMusic.AudioCategory = Windows.UI.Xaml.Media.AudioCategory.Media;
 
             StorageFolder Folder = Windows.ApplicationModel.Package.Current.InstalledLocation;
-            Folder = await Folder.GetFolderAsync("Assets");
-            StorageFile sf = await Folder.GetFileAsync("starwars.wav");
+            Folder = await Folder.GetFolderAsync("Sounds");
+            StorageFile sf = await Folder.GetFileAsync("modem.wav");
             PlayMusic.SetSource(await sf.OpenAsync(FileAccessMode.Read), sf.ContentType);
             PlayMusic.Play();
         }
@@ -162,6 +164,14 @@ namespace EdgeCasesApp
         //RPi / IoT device button press to get edge case results (pressing physical button)
         private void buttonPin_ValueChanged(GpioPin sender, GpioPinValueChangedEventArgs e)
         {
+            // toggle the state of the LED every time the button is pressed
+            if (e.Edge == GpioPinEdge.FallingEdge)
+            {
+                ledPinValue = (ledPinValue == GpioPinValue.Low) ?
+                    GpioPinValue.High : GpioPinValue.Low;
+                ledPin.Write(ledPinValue);
+            }
+
             var task = Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { GetResultsIoT(); });
         }
 
