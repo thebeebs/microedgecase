@@ -8,6 +8,9 @@ using System.Net.Http;
 using Windows.Storage;
 using Microsoft.Maker.RemoteWiring;
 using Microsoft.Maker.Serial;
+using Windows.Devices.SerialCommunication;
+using Windows.Storage.Streams;
+using System.Threading.Tasks;
 
 namespace EdgeCasesApp
 {
@@ -18,17 +21,22 @@ namespace EdgeCasesApp
         private const int BUTTON_PIN = 5;
         private GpioPin buttonPin;
 
+        private SerialDevice serialPort;
+        private DataWriter dataWriter;
+
+        private bool lowLevel = false;
+
         IStream connection;
         RemoteDevice arduino;
 
         public MainPage()
         {
             this.InitializeComponent();
-
-            if (Windows.Foundation.Metadata.ApiInformation.IsApiContractPresent("Windows.Devices.DevicesLowLevelContract", 1))
+            lowLevel = Windows.Foundation.Metadata.ApiInformation.IsApiContractPresent("Windows.Devices.DevicesLowLevelContract", 1);
+            if (lowLevel)
             {
                 InitGPIO();
-                InitRemoteSerialCom();
+                InitSerialCommsAsync();
             }
         }
 
@@ -60,26 +68,63 @@ namespace EdgeCasesApp
             GpioStatus.Text = "GPIO pins initialized correctly.";
         }
 
-        private void InitRemoteSerialCom()
+        private async void InitSerialCommsAsync()
         {
-            //create a usb connection and pass it to the RemoteDevice
-            connection = new UsbSerial("MyUSBDevice");
-            arduino = new RemoteDevice(connection);
+            string aqs = SerialDevice.GetDeviceSelector();
+            var devices = await Windows.Devices.Enumeration.DeviceInformation.FindAllAsync(aqs, null);
 
-            //add a callback method (delegate) to be invoked when the device is ready
-            arduino.DeviceReady += Setup;
+            if(devices.Count > 0)
+            {
+                string id = devices[0].Id;
+                serialPort = await SerialDevice.FromIdAsync(id);
 
-            connection.begin(115200, SerialConfig.SERIAL_8N1);
+                serialPort.WriteTimeout = TimeSpan.FromMilliseconds(1000);
+                serialPort.ReadTimeout = TimeSpan.FromMilliseconds(1000);
+                serialPort.BaudRate = 9600;
+                serialPort.Parity = SerialParity.None;
+                serialPort.StopBits = SerialStopBitCount.One;
+                serialPort.DataBits = 8;
+
+                dataWriter = new DataWriter(serialPort.OutputStream);
+
+                /* FOR TEST PURPOSES ONLY - REMOVE IN PROD
+                   n.b, keep all messages under 25 chars and
+                   understand that all messages sent within a
+                   certain time frame will be concatenated and
+                   also must adhere to the 25 char limit. The
+                   limit stops auto wrapping which can cause
+                   an infinite loop.
+                */
+                WriteToSerial("Test message #1");
+                //WriteToSerial("Test message #2");
+                //WriteToSerial("Test message #3");
+
+            }
+            else
+            {
+                throw new Exception("No devices found");
+            }
         }
 
-        //treat this function like "setup()" in an Arduino sketch.
-        public void Setup()
+        private async void WriteToSerial(string message)
         {
-            //set digital pin 13 to OUTPUT
-            arduino.pinMode(13, PinMode.OUTPUT);
+            dataWriter.WriteString(message);
+            // Launch an async task to complete the write operation
+            await dataWriter.StoreAsync();
+        }
 
-            //set analog pin A0 to ANALOG INPUT
-            arduino.pinMode("A0", PinMode.ANALOG);
+        private void CloseSerialComms()
+        {
+            if(serialPort != null)
+            {
+                serialPort.Dispose();
+            }
+
+            if(dataWriter != null)
+            {
+                dataWriter.DetachStream();
+                dataWriter = null;
+            }
         }
 
         private async void GetResultsIoT()
@@ -143,7 +188,12 @@ namespace EdgeCasesApp
                    - Dynamically generate UI
             */
 
-
+            if(lowLevel)
+            {
+                // Compile message to write over serial
+                //var msgToSend = "";
+                //WriteToSerialAsync(msgToSend);
+            }
 
             SolidColorBrush PASS_COLOUR = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 0, 255, 0));
             SolidColorBrush FAIL_COLOR = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 255, 0, 0));
