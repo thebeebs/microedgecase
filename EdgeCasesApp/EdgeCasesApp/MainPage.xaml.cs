@@ -14,35 +14,20 @@ namespace EdgeCasesApp
 
     public sealed partial class MainPage : Page
     {
-
         
-        private const int BUTTON1_PIN = 26;
-        private const int BUTTON2_PIN = 19;
-        private const int BUTTON3_PIN = 13;
-        private const int BUTTON4_PIN = 6;
-        private const int BUTTON5_PIN = 23;
+        private const int BUTTON_PIN = 26;
 
-        private const int LED1_PIN = 22;
-        private const int LED2_PIN = 27;
-        private const int LED3_PIN = 17;
-        private const int LED4_PIN = 4;
-        private const int LED5_PIN = 18;
+        private const int BLUE_LED_PIN = 22; //22;
+        private const int RED_LED_PIN = 13; //27;
+        private const int YELLOW_LED_PIN = 6; //10;
+        private const int GREEN_LED_PIN = 5; //4;
+ 
+        private GpioPin buttonPin;
 
-
-       
-        private GpioPin button1Pin;
-        private GpioPin button2Pin;
-        private GpioPin button3Pin;
-        private GpioPin button4Pin;
-        private GpioPin button5Pin;
-
-        private GpioPin led1Pin;
-        private GpioPin led2Pin;
-        private GpioPin led3Pin;
-        private GpioPin led4Pin;
-        private GpioPin led5Pin;
-
-
+        private GpioPin bluePin;
+        private GpioPin redPin;
+        private GpioPin yellowPin;
+        private GpioPin greenPin;
 
         private GpioPinValue ledPinValue = GpioPinValue.High;
 
@@ -70,25 +55,34 @@ namespace EdgeCasesApp
                 return;
             }
 
-            button1Pin = gpio.OpenPin(BUTTON1_PIN);
-            led1Pin = gpio.OpenPin(LED1_PIN);
+            buttonPin = gpio.OpenPin(BUTTON_PIN);
+            bluePin = gpio.OpenPin(BLUE_LED_PIN);
+            redPin = gpio.OpenPin(RED_LED_PIN);
+            yellowPin = gpio.OpenPin(YELLOW_LED_PIN);
+            greenPin = gpio.OpenPin(GREEN_LED_PIN);
 
             // Initialize LED to the OFF state by first writing a HIGH value
-            led1Pin.Write(GpioPinValue.High);
-            led1Pin.SetDriveMode(GpioPinDriveMode.Output);
+            bluePin.Write(GpioPinValue.High);
+            bluePin.SetDriveMode(GpioPinDriveMode.Output);
+            redPin.Write(GpioPinValue.High);
+            redPin.SetDriveMode(GpioPinDriveMode.Output);
+            yellowPin.Write(GpioPinValue.High);
+            yellowPin.SetDriveMode(GpioPinDriveMode.Output);
+            greenPin.Write(GpioPinValue.High);
+            greenPin.SetDriveMode(GpioPinDriveMode.Output);
 
             // Check if input pull-up resistors are supported
-            if (button1Pin.IsDriveModeSupported(GpioPinDriveMode.InputPullUp))
-                button1Pin.SetDriveMode(GpioPinDriveMode.InputPullUp);
+            if (buttonPin.IsDriveModeSupported(GpioPinDriveMode.InputPullUp))
+                buttonPin.SetDriveMode(GpioPinDriveMode.InputPullUp);
             else
-                button1Pin.SetDriveMode(GpioPinDriveMode.Input);
+                buttonPin.SetDriveMode(GpioPinDriveMode.Input);
 
             // Set a debounce timeout to filter out switch bounce noise from a button press
-            button1Pin.DebounceTimeout = TimeSpan.FromMilliseconds(50);
+            buttonPin.DebounceTimeout = TimeSpan.FromMilliseconds(50);
 
             // Register for the ValueChanged event so our buttonPin_ValueChanged 
             // function is called when the button is pressed
-            button1Pin.ValueChanged += buttonPin_ValueChanged;
+            buttonPin.ValueChanged += buttonPin_ValueChanged;
 
             GpioStatus.Text = "GPIO pins initialized correctly.";
         }
@@ -222,7 +216,10 @@ namespace EdgeCasesApp
             {
                 ledPinValue = (ledPinValue == GpioPinValue.Low) ?
                     GpioPinValue.High : GpioPinValue.Low;
-                led1Pin.Write(ledPinValue);
+                bluePin.Write(ledPinValue);
+                redPin.Write(ledPinValue);
+                yellowPin.Write(ledPinValue);
+                greenPin.Write(ledPinValue);
             }
 
             var task = Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { GetResultsIoT(); });
