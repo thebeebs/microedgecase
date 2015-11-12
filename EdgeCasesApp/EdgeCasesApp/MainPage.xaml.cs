@@ -8,20 +8,23 @@ using System.Net.Http;
 using Windows.Storage;
 using Microsoft.Maker.RemoteWiring;
 using Microsoft.Maker.Serial;
+using Windows.Devices.SerialCommunication;
+using Windows.Storage.Streams;
+using System.Threading.Tasks;
 
 namespace EdgeCasesApp
 {
 
     public sealed partial class MainPage : Page
     {
-        
+
         private const int BUTTON_PIN = 26;
 
         private const int BLUE_LED_PIN = 22; //22;
         private const int RED_LED_PIN = 13; //27;
         private const int YELLOW_LED_PIN = 6; //10;
         private const int GREEN_LED_PIN = 5; //4;
- 
+
         private GpioPin buttonPin;
 
         private GpioPin bluePin;
@@ -31,17 +34,18 @@ namespace EdgeCasesApp
 
         private GpioPinValue ledPinValue = GpioPinValue.High;
 
-        IStream connection;
-        RemoteDevice arduino;
+        private SerialDevice serialPort;
+        private DataWriter dataWriter;
+        private bool lowLevel;
 
         public MainPage()
         {
             this.InitializeComponent();
-
-            if (Windows.Foundation.Metadata.ApiInformation.IsApiContractPresent("Windows.Devices.DevicesLowLevelContract", 1))
+            lowLevel = Windows.Foundation.Metadata.ApiInformation.IsApiContractPresent("Windows.Devices.DevicesLowLevelContract", 1);
+            if (lowLevel)
             {
                 InitGPIO();
-                InitRemoteSerialCom();
+                InitSerialCommsAsync();
             }
         }
 
@@ -87,26 +91,63 @@ namespace EdgeCasesApp
             GpioStatus.Text = "GPIO pins initialized correctly.";
         }
 
-        private void InitRemoteSerialCom()
+        private async void InitSerialCommsAsync()
         {
-            //create a usb connection and pass it to the RemoteDevice
-            connection = new UsbSerial("MyUSBDevice");
-            arduino = new RemoteDevice(connection);
+            string aqs = SerialDevice.GetDeviceSelector();
+            var devices = await Windows.Devices.Enumeration.DeviceInformation.FindAllAsync(aqs, null);
 
-            //add a callback method (delegate) to be invoked when the device is ready
-            arduino.DeviceReady += Setup;
+            if (devices.Count > 0)
+            {
+                string id = devices[0].Id;
+                serialPort = await SerialDevice.FromIdAsync(id);
 
-            connection.begin(115200, SerialConfig.SERIAL_8N1);
+                serialPort.WriteTimeout = TimeSpan.FromMilliseconds(1000);
+                serialPort.ReadTimeout = TimeSpan.FromMilliseconds(1000);
+                serialPort.BaudRate = 9600;
+                serialPort.Parity = SerialParity.None;
+                serialPort.StopBits = SerialStopBitCount.One;
+                serialPort.DataBits = 8;
+
+                dataWriter = new DataWriter(serialPort.OutputStream);
+
+                /* FOR TEST PURPOSES ONLY - REMOVE IN PROD
+                   n.b, keep all messages under 25 chars and
+                   understand that all messages sent within a
+                   certain time frame will be concatenated and
+                   also must adhere to the 25 char limit. The
+                   limit stops auto wrapping which can cause
+                   an infinite loop.
+                */
+                //WriteToSerial("Test message #1");
+                //WriteToSerial("Test message #2");
+                //WriteToSerial("Test message #3");
+
+            }
+            else
+            {
+                throw new Exception("No devices found");
+            }
         }
 
-        //treat this function like "setup()" in an Arduino sketch.
-        public void Setup()
+        private async void WriteToSerial(string message)
         {
-            //set digital pin 13 to OUTPUT
-            arduino.pinMode(13, PinMode.OUTPUT);
+            dataWriter.WriteString(message);
+            // Launch an async task to complete the write operation
+            await dataWriter.StoreAsync();
+        }
 
-            //set analog pin A0 to ANALOG INPUT
-            arduino.pinMode("A0", PinMode.ANALOG);
+        private void CloseSerialComms()
+        {
+            if (serialPort != null)
+            {
+                serialPort.Dispose();
+            }
+
+            if (dataWriter != null)
+            {
+                dataWriter.DetachStream();
+                dataWriter = null;
+            }
         }
 
         private async void GetResultsIoT()
@@ -131,12 +172,12 @@ namespace EdgeCasesApp
             {
                 GpioStatus.Text = "No internet";
                 System.Diagnostics.Debug.Write(httpEx);
-            }        
+            }
 
             resultsProgressRing.IsActive = false;
 
             GpioStatus.Text = "Found it!";
-        }   
+        }
 
         private async void PlayMusic()
         {
@@ -164,7 +205,12 @@ namespace EdgeCasesApp
                    - Dynamically generate UI
             */
 
-
+            if (lowLevel)
+            {
+                // Compile message to write over serial
+                //var msgToSend = "";
+                //WriteToSerialAsync(msgToSend);
+            }
 
             SolidColorBrush PASS_COLOUR = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 0, 255, 0));
             SolidColorBrush FAIL_COLOR = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 255, 0, 0));
@@ -220,6 +266,7 @@ namespace EdgeCasesApp
                 redPin.Write(ledPinValue);
                 yellowPin.Write(ledPinValue);
                 greenPin.Write(ledPinValue);
+                WriteToSerial("Hello World :)");
             }
 
             var task = Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { GetResultsIoT(); });
