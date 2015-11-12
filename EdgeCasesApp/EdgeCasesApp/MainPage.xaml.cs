@@ -150,14 +150,12 @@ namespace EdgeCasesApp
             }
         }
 
-        private async void GetResultsIoT()
+        private async void CompatTest()
         {
             resultsProgressRing.IsActive = true;
 
             try
             {
-                PlayMusic();
-
                 RootObject edgeCase;
                 edgeCase = await EdgeCaseModel.GetResultsTwilio();
                 DisplayResults(edgeCase);
@@ -257,19 +255,41 @@ namespace EdgeCasesApp
         //RPi / IoT device button press to get edge case results (pressing physical button)
         private void buttonPin_ValueChanged(GpioPin sender, GpioPinValueChangedEventArgs e)
         {
-            // toggle the state of the LED every time the button is pressed
-            if (e.Edge == GpioPinEdge.FallingEdge)
+            // Ignore button press if already running a compat test
+            if(bluePin.Read() == GpioPinValue.Low)
             {
-                ledPinValue = (ledPinValue == GpioPinValue.Low) ?
-                    GpioPinValue.High : GpioPinValue.Low;
-                bluePin.Write(ledPinValue);
-                redPin.Write(ledPinValue);
-                yellowPin.Write(ledPinValue);
-                greenPin.Write(ledPinValue);
-                WriteToSerial("Hello World :)");
-            }
+                // Run the compat test logic here...
 
-            var task = Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { GetResultsIoT(); });
+                // turn blue led on
+
+                // insert service call to fetch results ( CompatTest )
+
+                // insert async LED animiation
+
+                // insert write to Arduino LCD screen
+
+                // play audio
+                PlayMusic();
+
+                // [NOTE] Below is legacy code which will be removed, but I'm leaving it here as example code for now...
+
+                // toggle the state of the LED every time the button is pressed
+                if (e.Edge == GpioPinEdge.FallingEdge)
+                {
+                    ledPinValue = (ledPinValue == GpioPinValue.Low) ?
+                        GpioPinValue.High : GpioPinValue.Low;
+                    bluePin.Write(ledPinValue);
+                    redPin.Write(ledPinValue);
+                    yellowPin.Write(ledPinValue);
+                    greenPin.Write(ledPinValue);
+                    WriteToSerial("Hello World :)");
+                }
+
+                var task = Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { CompatTest(); });
+
+                // once the compat test is complete and everything and we are ready to accept another call - turn off blue led
+                // bluePin.Write(GpioPinValue.Low);
+            }
         }
 
         //Mobile/table/PC device button press to get edge case results (pressing the 'GO' button in the UI)
@@ -304,37 +324,6 @@ namespace EdgeCasesApp
             resultsProgressRing.IsActive = false;
             GpioStatus.Text = "Found it!";
         }
-
-        private void Button_BrowserDetectionDetails_Click(object sender, RoutedEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void Button_MarkupDetails_Click(object sender, RoutedEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void Button_JSLibDetails_Click(object sender, RoutedEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void Button_CSSPrefixesDetails_Click(object sender, RoutedEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void Button_PluginFreeDetails_Click(object sender, RoutedEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void Button_EdgeDetails_Click(object sender, RoutedEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
     }
 }
 
