@@ -13,10 +13,35 @@ namespace EdgeCasesApp
     public sealed partial class MainPage : Page
     {
 
-        private const int LED_PIN = 6;
-        private const int BUTTON_PIN = 5;
-        private GpioPin ledPin;
-        private GpioPin buttonPin;
+        
+        private const int BUTTON1_PIN = 26;
+        private const int BUTTON2_PIN = 19;
+        private const int BUTTON3_PIN = 13;
+        private const int BUTTON4_PIN = 6;
+        private const int BUTTON5_PIN = 23;
+
+        private const int LED1_PIN = 22;
+        private const int LED2_PIN = 27;
+        private const int LED3_PIN = 17;
+        private const int LED4_PIN = 4;
+        private const int LED5_PIN = 18;
+
+
+       
+        private GpioPin button1Pin;
+        private GpioPin button2Pin;
+        private GpioPin button3Pin;
+        private GpioPin button4Pin;
+        private GpioPin button5Pin;
+
+        private GpioPin led1Pin;
+        private GpioPin led2Pin;
+        private GpioPin led3Pin;
+        private GpioPin led4Pin;
+        private GpioPin led5Pin;
+
+
+
         private GpioPinValue ledPinValue = GpioPinValue.High;
 
         public MainPage()
@@ -39,25 +64,25 @@ namespace EdgeCasesApp
                 return;
             }
 
-            buttonPin = gpio.OpenPin(BUTTON_PIN);
-            ledPin = gpio.OpenPin(LED_PIN);
+            button1Pin = gpio.OpenPin(BUTTON1_PIN);
+            led1Pin = gpio.OpenPin(LED1_PIN);
 
             // Initialize LED to the OFF state by first writing a HIGH value
-            ledPin.Write(GpioPinValue.High);
-            ledPin.SetDriveMode(GpioPinDriveMode.Output);
+            led1Pin.Write(GpioPinValue.High);
+            led1Pin.SetDriveMode(GpioPinDriveMode.Output);
 
             // Check if input pull-up resistors are supported
-            if (buttonPin.IsDriveModeSupported(GpioPinDriveMode.InputPullUp))
-                buttonPin.SetDriveMode(GpioPinDriveMode.InputPullUp);
+            if (button1Pin.IsDriveModeSupported(GpioPinDriveMode.InputPullUp))
+                button1Pin.SetDriveMode(GpioPinDriveMode.InputPullUp);
             else
-                buttonPin.SetDriveMode(GpioPinDriveMode.Input);
+                button1Pin.SetDriveMode(GpioPinDriveMode.Input);
 
             // Set a debounce timeout to filter out switch bounce noise from a button press
-            buttonPin.DebounceTimeout = TimeSpan.FromMilliseconds(50);
+            button1Pin.DebounceTimeout = TimeSpan.FromMilliseconds(50);
 
             // Register for the ValueChanged event so our buttonPin_ValueChanged 
             // function is called when the button is pressed
-            buttonPin.ValueChanged += buttonPin_ValueChanged;
+            button1Pin.ValueChanged += buttonPin_ValueChanged;
 
             GpioStatus.Text = "GPIO pins initialized correctly.";
         }
@@ -169,7 +194,7 @@ namespace EdgeCasesApp
             {
                 ledPinValue = (ledPinValue == GpioPinValue.Low) ?
                     GpioPinValue.High : GpioPinValue.Low;
-                ledPin.Write(ledPinValue);
+                led1Pin.Write(ledPinValue);
             }
 
             var task = Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { GetResultsIoT(); });
