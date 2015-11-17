@@ -51,7 +51,18 @@ namespace EdgeCasesApp
 
         private void InitGPIO()
         {
-            var gpio = GpioController.GetDefault();
+            GpioController gpio;
+
+            try
+            {
+                gpio = GpioController.GetDefault();
+            }
+            catch (Exception)
+            {
+
+                gpio = null;
+            }
+            
 
             if (gpio == null)
             {
@@ -125,7 +136,9 @@ namespace EdgeCasesApp
             }
             else
             {
-                throw new Exception("No devices found");
+                // Removed throw, since I want the app to 
+                // work even if there are no lCD screens attached
+                // throw new Exception("No devices found");
             }
         }
 

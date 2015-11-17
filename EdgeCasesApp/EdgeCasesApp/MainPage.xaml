@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:EdgeCasesApp"
+    xmlns:gif="using:XamlAnimatedGif"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
@@ -27,34 +28,35 @@
             <Button x:Name="Button_URLSubmit" Content="Go" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Top" Height="55" Width="100"  Click="Button_Click" FontSize="26.667" FontWeight="Bold" />
             <StackPanel Grid.Row="1" Margin="0, 10, 0, 0">
                 <ProgressRing Name="resultsProgressRing"  IsActive="False" Margin="20"/>
+                <Image  gif:AnimationBehavior.SourceUri="Assets\pl.gif" />
                 <TextBox x:Name="GpioStatus" Grid.Row="0"  TextWrapping="Wrap" Text=""  HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="55" FontSize="32" MaxLength="17"/>
                 <StackPanel Name="TextBox_BrowserDetectionPanel" Orientation="Horizontal" MinHeight="100" MaxHeight="250" Visibility="Collapsed">
-                    <Button Name="Button_BrowserDetectionDetails" Content="+" VerticalAlignment="Center" Margin="15,0" Click="Button_BrowserDetectionDetails_Click"></Button>
+                    <Button Name="Button_BrowserDetectionDetails" Content="+" VerticalAlignment="Center" Margin="15,0" ></Button>
                     <TextBlock Name="TextBox_BrowserDetectionTitle" HorizontalAlignment="Stretch" Width="450" FontSize="30" VerticalAlignment="Center"></TextBlock>
                     <TextBlock Name="TextBox_BrowserDetectionStatus" HorizontalAlignment="Right" FontSize="30" VerticalAlignment="Center" FontWeight="Bold"></TextBlock>
                 </StackPanel>
                 <StackPanel Name="TextBox_MarkupPanel" Orientation="Horizontal" MinHeight="100" MaxHeight="250" Visibility="Collapsed">
-                    <Button Name="Button_MarkupDetails" Content="+" VerticalAlignment="Center" Margin="15,0" Click="Button_MarkupDetails_Click"></Button>
+                    <Button Name="Button_MarkupDetails" Content="+" VerticalAlignment="Center" Margin="15,0"></Button>
                     <TextBlock Name="TextBox_MarkupTitle" HorizontalAlignment="Stretch" Width="450" FontSize="30" VerticalAlignment="Center"></TextBlock>
                     <TextBlock Name="TextBox_MarkupStatus" HorizontalAlignment="Right" FontSize="30" VerticalAlignment="Center" FontWeight="Bold"></TextBlock>
                 </StackPanel>
                 <StackPanel Name="TextBox_JSLibPanel" Orientation="Horizontal" MinHeight="100" MaxHeight="250" Visibility="Collapsed">
-                    <Button Name="Button_JSLibDetails" Content="+" VerticalAlignment="Center" Margin="15,0" Click="Button_JSLibDetails_Click"></Button>
+                    <Button Name="Button_JSLibDetails" Content="+" VerticalAlignment="Center" Margin="15,0" ></Button>
                     <TextBlock Name="TextBox_JSLibTitle" HorizontalAlignment="Stretch" Width="450" FontSize="30" VerticalAlignment="Center"></TextBlock>
                     <TextBlock Name="TextBox_JSLibStatus" HorizontalAlignment="Right" FontSize="30" VerticalAlignment="Center" FontWeight="Bold"></TextBlock>
                 </StackPanel>
                 <StackPanel Name="TextBox_CSSPrefixesPanel" Orientation="Horizontal" MinHeight="100" MaxHeight="250" Visibility="Collapsed">
-                    <Button Name="Button_CSSPrefixesDetails" Content="+" VerticalAlignment="Center" Margin="15,0" Click="Button_CSSPrefixesDetails_Click"></Button>
+                    <Button Name="Button_CSSPrefixesDetails" Content="+" VerticalAlignment="Center" Margin="15,0" ></Button>
                     <TextBlock Name="TextBox_CSSPrefixesTitle" HorizontalAlignment="Stretch" Width="450" FontSize="30" VerticalAlignment="Center"></TextBlock>
                     <TextBlock Name="TextBox_CSSPrefixesStatus" HorizontalAlignment="Right" FontSize="30" VerticalAlignment="Center" FontWeight="Bold"></TextBlock>
                 </StackPanel>
                 <StackPanel Name="TextBox_PluginFreePanel" Orientation="Horizontal" MinHeight="100" MaxHeight="250" Visibility="Collapsed">
-                    <Button Name="Button_PluginFreeDetails" Content="+" VerticalAlignment="Center" Margin="15,0" Click="Button_PluginFreeDetails_Click"></Button>
+                    <Button Name="Button_PluginFreeDetails" Content="+" VerticalAlignment="Center" Margin="15,0" ></Button>
                     <TextBlock Name="TextBox_PluginFreeTitle" HorizontalAlignment="Stretch" Width="450" FontSize="30" VerticalAlignment="Center"></TextBlock>
                     <TextBlock Name="TextBox_PluginFreeStatus" HorizontalAlignment="Right" FontSize="30" VerticalAlignment="Center" FontWeight="Bold"></TextBlock>
                 </StackPanel>
                 <StackPanel Name="TextBox_EdgePanel" Orientation="Horizontal" MinHeight="100" MaxHeight="250" Visibility="Collapsed">
-                    <Button Name="Button_EdgeDetails" Content="+" VerticalAlignment="Center" Margin="15,0" Click="Button_EdgeDetails_Click"></Button>
+                    <Button Name="Button_EdgeDetails" Content="+" VerticalAlignment="Center" Margin="15,0" ></Button>
                     <TextBlock Name="TextBox_EdgeTitle" HorizontalAlignment="Stretch" Width="450" FontSize="30" VerticalAlignment="Center"></TextBlock>
                     <TextBlock Name="TextBox_EdgeStatus" HorizontalAlignment="Right" FontSize="30" VerticalAlignment="Center" FontWeight="Bold"></TextBlock>
                 </StackPanel>
