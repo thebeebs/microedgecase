@@ -17,16 +17,14 @@ namespace EdgeCasesApp
 
     public sealed partial class MainPage : Page
     {
-
+        // Pin Numbers can be found here: http://ms-iot.github.io/content/en-US/win10/samples/PinMappingsRPi2.htm
         private const int BUTTON_PIN = 26;
-
-        private const int BLUE_LED_PIN = 22; //22;
+        private const int BLUE_LED_PIN = 16; //22;
         private const int RED_LED_PIN = 13; //27;
         private const int YELLOW_LED_PIN = 6; //10;
         private const int GREEN_LED_PIN = 5; //4;
 
         private GpioPin buttonPin;
-
         private GpioPin bluePin;
         private GpioPin redPin;
         private GpioPin yellowPin;
@@ -77,13 +75,13 @@ namespace EdgeCasesApp
             greenPin = gpio.OpenPin(GREEN_LED_PIN);
 
             // Initialize LED to the OFF state by first writing a HIGH value
-            bluePin.Write(GpioPinValue.High);
+            bluePin.Write(ledPinValue);
             bluePin.SetDriveMode(GpioPinDriveMode.Output);
-            redPin.Write(GpioPinValue.High);
+            redPin.Write(ledPinValue);
             redPin.SetDriveMode(GpioPinDriveMode.Output);
-            yellowPin.Write(GpioPinValue.High);
+            yellowPin.Write(ledPinValue);
             yellowPin.SetDriveMode(GpioPinDriveMode.Output);
-            greenPin.Write(GpioPinValue.High);
+            greenPin.Write(ledPinValue);
             greenPin.SetDriveMode(GpioPinDriveMode.Output);
 
             // Check if input pull-up resistors are supported
@@ -93,12 +91,11 @@ namespace EdgeCasesApp
                 buttonPin.SetDriveMode(GpioPinDriveMode.Input);
 
             // Set a debounce timeout to filter out switch bounce noise from a button press
-            buttonPin.DebounceTimeout = TimeSpan.FromMilliseconds(50);
+            buttonPin.DebounceTimeout = TimeSpan.FromMilliseconds(100);
 
             // Register for the ValueChanged event so our buttonPin_ValueChanged 
             // function is called when the button is pressed
             buttonPin.ValueChanged += buttonPin_ValueChanged;
-
             GpioStatus.Text = "GPIO pins initialized correctly.";
         }
 
@@ -163,7 +160,7 @@ namespace EdgeCasesApp
             }
         }
 
-        private async void CompatTest()
+        private async Task<bool> CompatTest()
         {
             resultsProgressRing.IsActive = true;
 
@@ -178,28 +175,31 @@ namespace EdgeCasesApp
             {
                 GpioStatus.Text = "No website URL found";
                 System.Diagnostics.Debug.Write(nullEx);
+                
             }
             catch (HttpRequestException httpEx)
             {
                 GpioStatus.Text = "No internet";
                 System.Diagnostics.Debug.Write(httpEx);
+           
             }
 
             resultsProgressRing.IsActive = false;
 
             GpioStatus.Text = "Found it!";
+            return true;
         }
 
         private async void PlayMusic()
         {
-            MediaElement PlayMusic = new MediaElement();
-            PlayMusic.AudioCategory = Windows.UI.Xaml.Media.AudioCategory.Media;
+            //MediaElement PlayMusicElement = new MediaElement();
+            PlayMusicElement.AudioCategory = Windows.UI.Xaml.Media.AudioCategory.Media;
 
             StorageFolder Folder = Windows.ApplicationModel.Package.Current.InstalledLocation;
             Folder = await Folder.GetFolderAsync("Sounds");
             StorageFile sf = await Folder.GetFileAsync("modem.wav");
-            PlayMusic.SetSource(await sf.OpenAsync(FileAccessMode.Read), sf.ContentType);
-            PlayMusic.Play();
+            PlayMusicElement.SetSource(await sf.OpenAsync(FileAccessMode.Read), sf.ContentType);
+            PlayMusicElement.Play();
         }
 
         private void DisplayResults(RootObject edgeCase)
@@ -266,42 +266,45 @@ namespace EdgeCasesApp
         }
 
         //RPi / IoT device button press to get edge case results (pressing physical button)
-        private void buttonPin_ValueChanged(GpioPin sender, GpioPinValueChangedEventArgs e)
+        private async void buttonPin_ValueChanged(GpioPin sender, GpioPinValueChangedEventArgs e)
         {
-            // Ignore button press if already running a compat test
-            if(bluePin.Read() == GpioPinValue.Low)
+
+            
+    // Ignore button press if already running a compat test
+    // Also only when the button is pressed down, not when released (GpioPinEdge.FallingEdge)
+    if (bluePin.Read() != GpioPinValue.Low && e.Edge == GpioPinEdge.FallingEdge)
             {
-                // Run the compat test logic here...
-
                 // turn blue led on
+                bluePin.Write(GpioPinValue.Low);
+                redPin.Write(GpioPinValue.High);
+                yellowPin.Write(GpioPinValue.High);
+                greenPin.Write(GpioPinValue.High);
 
-                // insert service call to fetch results ( CompatTest )
+                await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+      async () =>
+      {
+          // Write to the LCD
+          WriteToSerial("Connecting to Azure");
+          //Start the Modem Noise
+          PlayMusic();
+          // Start tests
+          await CompatTest();
+          // Tests should now be finished so
+          // Stop the modem noise
+          PlayMusicElement.Stop();
+          // Switch blue light Off
+          // This will also mean that the machine can accept another test
+          bluePin.Write(GpioPinValue.High);
+          redPin.Write(GpioPinValue.Low);
+          yellowPin.Write(GpioPinValue.Low);
+          greenPin.Write(GpioPinValue.Low);
+      }
+      );
 
-                // insert async LED animiation
 
-                // insert write to Arduino LCD screen
+       
 
-                // play audio
-                PlayMusic();
 
-                // [NOTE] Below is legacy code which will be removed, but I'm leaving it here as example code for now...
-
-                // toggle the state of the LED every time the button is pressed
-                if (e.Edge == GpioPinEdge.FallingEdge)
-                {
-                    ledPinValue = (ledPinValue == GpioPinValue.Low) ?
-                        GpioPinValue.High : GpioPinValue.Low;
-                    bluePin.Write(ledPinValue);
-                    redPin.Write(ledPinValue);
-                    yellowPin.Write(ledPinValue);
-                    greenPin.Write(ledPinValue);
-                    WriteToSerial("Hello World :)");
-                }
-
-                var task = Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { CompatTest(); });
-
-                // once the compat test is complete and everything and we are ready to accept another call - turn off blue led
-                // bluePin.Write(GpioPinValue.Low);
             }
         }
 
